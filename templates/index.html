@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Library System</a>
+            <div>
+                <a class="btn btn-light me-2" href="/add_book">Add Book</a>
+                <a class="btn btn-light me-2" href="/members">Members</a>
+                <a class="btn btn-light me-2" href="/add_member">Add Member</a>
+                <a class="btn btn-light" href="/borrow">Borrow Book</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <h1 class="mb-4">Library Books</h1>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="alert alert-info">{{ messages[0] }}</div>
+        {% endif %}
+        {% endwith %}
+        <form class="d-flex mb-4" action="/search" method="get" role="search">
+            <input class="form-control me-2" type="search" name="q" placeholder="Search by title or author" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Available</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                <tr>
+                    <td>{{ book.id }}</td>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.author }}</td>
+                    <td>{{ 'Yes' if book.available else 'No' }}</td>
+                    <td>
+                        {% if not book.available %}
+                            <a class="btn btn-success btn-sm" href="/return/{{ book.borrows[0].id }}">Return</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
